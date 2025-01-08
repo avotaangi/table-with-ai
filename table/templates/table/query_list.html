@@ -9,13 +9,20 @@
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Список таблиц</h1>
-        <a href="{% url 'query_create' %}" class="btn btn-primary mb-3">Создать таблиц</a>
+        <a href="{% url 'query_create' %}" class="btn btn-primary mb-3">Создать таблицу</a>
         <ul class="list-group">
             {% for query in queries %}
-                <a href="{% url 'query_result' query.pk %}" class="list-group-item list-group-item-action">
-                    {{ query.query_text|truncatechars:100 }}
-                </a>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'query_result' query.pk %}" class="text-decoration-none">
+                        {{ query.query_text|truncatechars:100 }}
+                    </a>
+                    <form method="POST" action="{% url 'query_delete' query.pk %}" class="ms-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </li>
             {% endfor %}
         </ul>
     </div>
 </body>
+</html>

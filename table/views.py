@@ -133,3 +133,11 @@ def query_download(request, pk, file_format):
         with pd.ExcelWriter(response, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
     return response
+
+def query_delete(request, pk):
+    """Удаление таблицы."""
+    query = get_object_or_404(QueryLog, pk=pk)
+    if request.method == 'POST':
+        query.delete()
+        return redirect('query_list')
+    return JsonResponse({'status': 'failed', 'message': 'Метод не поддерживается'}, status=405)
