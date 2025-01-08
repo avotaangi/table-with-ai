@@ -13,4 +13,4 @@ class QueryLog(models.Model):
         ordering = ['-created_at']  # Сортировка по времени запроса в порядке убывания
 
     def __str__(self):
-        return f"Запрос: {self.query_text[:50]}... | Время: {self.query_time}"
+        return f"Запрос: {self.query_text[:50]}... | Время: {self.created_at}"
