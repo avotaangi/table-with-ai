@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Результат запроса</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Результат запроса</h1>
+    <div class="mb-4">
+        <strong>Текстовый запрос:</strong>
+        <p>{{ query.query_text }}</p>
+    </div>
+    <form id="table-form" method="POST" action="{% url 'query_save' query.pk %}">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                {% for header in query.table_data.0.keys %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in query.table_data %}
+            <tr>
+                {% for value in row.values %}
+                <td contenteditable="true">{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+    <a href="{% url 'query_download' query.pk 'xlsx' %}" class="btn btn-success">Скачать XLSX</a>
+    <a href="{% url 'query_download' query.pk 'csv' %}" class="btn btn-info">Скачать CSV</a>
+
+    <a href="{% url 'query_edit' query.pk %}" class="btn btn-warning">Редактировать запрос</a>
+    <a href="{% url 'query_list' %}" class="btn btn-secondary">Вернуться к списку</a>
+</div>
+
+<script>
+document.getElementById('table-form').addEventListener('submit', function (e) {
+    e.preventDefault(); // Останавливаем стандартную отправку формы
+
+    const tableRows = document.querySelectorAll('table tbody tr');
+    const tableData = [];
+
+    // Сбор заголовков
+    const headers = Array.from(document.querySelectorAll('table thead th')).map(th => th.textContent.trim());
+    tableData.push(headers); // Сохраняем заголовки как массив
+
+    // Сбор данных строк
+    tableRows.forEach(row => {
+        const rowData = Array.from(row.querySelectorAll('td')).map(td => td.textContent.trim());
+        if (rowData.length === headers.length) { // Убедимся, что данные строки корректны
+            tableData.push(rowData);
+        }
+    });
+
+    // Отправка данных через fetch
+    fetch(this.action, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ table_data: tableData }) // Отправляем данные в JSON-формате
+    }).then(response => response.json())
+      .then(data => {
+          if (data.status === 'success') {
+              alert('Таблица успешно сохранена!');
+          } else {
+              alert('Ошибка: ' + data.message);
+          }
+      })
+      .catch(error => {
+          console.error('Ошибка при сохранении таблицы:', error);
+          alert('Произошла ошибка при сохранении.');
+      });
+    });
+
+</script>
+</body>
+</html>

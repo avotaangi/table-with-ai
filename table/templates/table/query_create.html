@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Создать запрос</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Создать запрос</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="query_text" class="form-label">Текстовый запроса:</label>
+                <textarea name="query_text" id="query_text" class="form-control" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Продолжить</button>
+        </form>
+    </div>
+</body>
+</html>
