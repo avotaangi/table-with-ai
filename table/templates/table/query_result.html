@@ -11,7 +11,7 @@
     <h1>Результат запроса</h1>
     <div class="mb-4">
         <strong>Текстовый запрос:</strong>
-        <p>{{ query.query_text }}</p>
+            <textarea name="query_text" id="query_text" class="form-control" rows="4" readonly required>{{ query.query_text }}</textarea>
     </div>
     <form id="table-form" method="POST" action="{% url 'query_save' query.pk %}">
         {% csrf_token %}

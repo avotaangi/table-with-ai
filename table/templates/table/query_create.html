@@ -7,16 +7,26 @@
     <title>Создать запрос</title>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Создать запрос</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="query_text" class="form-label">Текстовый запроса:</label>
-                <textarea name="query_text" id="query_text" class="form-control" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-success">Продолжить</button>
-        </form>
-    </div>
+<div class="container mt-5">
+    <h1>Создать запрос</h1>
+    <p>Напишите свой запрос для генерации таблицы. Советуем расписать как можно подробнее для получения наилучшего
+        результата</p>
+    <b>Шаблон запроса:</b>
+    <i>Создай таблицу из [количество] колонок: первая колонка — [название первой колонки], вторая — [название второй
+        колонки], третья — [название третьей колонки] и так далее. Заполни таблицу примерами, относящимися к [тема или
+        контекст таблицы]. </i>
+    <br>
+    <br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="query_text" class="form-label">Напишите Ваш запрос ниже:</label>
+            <textarea name="query_text" id="query_text" class="form-control" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Продолжить</button>
+        <a href="{% url 'query_list' %}" class="btn btn-secondary">Вернуться к списку</a>
+
+    </form>
+</div>
 </body>
 </html>

@@ -7,16 +7,27 @@
     <title>Редактировать запрос</title>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Редактировать запрос для создания таблицы</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="query_text" class="form-label">Текстовый запрос:</label>
-                <textarea name="query_text" id="query_text" class="form-control" rows="4" required>{{ query.query_text }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-success">Сохранить</button>
-        </form>
-    </div>
+<div class="container mt-5">
+    <h1>Редактировать запрос для создания таблицы</h1>
+    <p>Напишите свой запрос для генерации таблицы. Советуем расписать как можно подробнее для получения наилучшего
+        результата</p>
+    <b>Шаблон запроса:</b>
+    <i>Создай таблицу из [количество] колонок: первая колонка — [название первой колонки], вторая — [название второй
+        колонки], третья — [название третьей колонки] и так далее. Заполни таблицу примерами, относящимися к [тема или
+        контекст таблицы]. </i>
+    <br>
+    <br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="query_text" class="form-label">Текстовый запрос:</label>
+            <textarea name="query_text" id="query_text" class="form-control" rows="4"
+                      required>{{ query.query_text }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'query_result' query.pk %}" class="btn btn-secondary">Назад</a>
+
+    </form>
+</div>
 </body>
 </html>
