@@ -19,21 +19,6 @@
             border-radius: 8px;
             text-align: center;
         }
-        .list-group-item {
-            position: relative;
-            padding-left: 1.5rem;
-        }
-        .list-group-item a {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            padding: 1rem;
-        }
         .list-group-item:hover {
             background-color: #f1f1f1;
         }
@@ -61,12 +46,12 @@
             <ul class="list-group">
                 {% for query in queries %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a href="{% url 'query_result' query.pk %}">
-                            <div>
-                                <span class="fw-bold text-primary">{{ query.query_text|truncatechars:100 }}</span>
-                                <p class="mb-0 text-muted">Дата создания: {{ query.created_at|date:"d.m.Y H:i" }}</p>
-                            </div>
-                        </a>
+                        <div onclick="window.location.href='{% url 'query_result' query.pk %}';">
+                            <a href="{% url 'query_result' query.pk %}" class="text-decoration-none fw-bold text-primary">
+                                {{ query.query_text|truncatechars:100 }}
+                            </a>
+                            <p class="mb-0 text-muted">Дата создания: {{ query.created_at|date:"d.m.Y H:i" }}</p>
+                        </div>
                         <form method="POST" action="{% url 'query_delete' query.pk %}" class="ms-3">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
