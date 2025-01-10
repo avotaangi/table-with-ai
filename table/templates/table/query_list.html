@@ -28,7 +28,7 @@
                             <a href="{% url 'query_result' query.pk %}" class="text-decoration-none fw-bold text-primary">
                                 {{ query.query_text|truncatechars:100 }}
                             </a>
-                            <p class="mb-0 text-muted">Дата создания: {{ query.created_at|date:"c" }}</p>
+                            <p class="mb-0 text-muted">Дата создания: {{ query.created_at|date:"d.m.Y H:i" }}</p>
                         </div>
                         <form method="POST" action="{% url 'query_delete' query.pk %}" class="ms-3">
                             {% csrf_token %}

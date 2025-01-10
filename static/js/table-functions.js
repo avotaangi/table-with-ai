@@ -1,26 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Преобразование времени в локальное
-    function formatDates() {
-        document.querySelectorAll('.text-muted').forEach(element => {
-            const utcTime = element.textContent.match(/Дата создания: (.+)/);
-            if (utcTime && utcTime[1]) {
-                const date = new Date(utcTime[1]);
-                // Форматирование даты в d.m.y H:M
-                const formattedDate = new Intl.DateTimeFormat('ru-RU', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }).format(date);
-                element.textContent = `Дата создания: ${formattedDate}`;
-            }
-        });
-    }
-
-    // Вызов функции форматирования времени
-    formatDates();
-
     // Добавление строки
     document.getElementById('add-row').addEventListener('click', () => {
         const tableBody = document.querySelector('table tbody');
