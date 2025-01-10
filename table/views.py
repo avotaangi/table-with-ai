@@ -16,6 +16,8 @@ logging.basicConfig(level=logging.DEBUG)
 def parse_table_to_json(table_str):
     """Конвертирует строковую таблицу в JSON."""
     data = [row.split('|')[1:-1] for row in table_str.splitlines() if '|' in row and '-' not in row]
+    if not data:
+        raise None
     headers = data.pop(0)
     return [dict(zip(headers, row)) for row in data]
 
