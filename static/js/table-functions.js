@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Функция преобразования времени
+    const convertToUserTimezone = (utcTime) => {
+        const date = new Date(utcTime);
+        return new Intl.DateTimeFormat('default', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short',
+        }).format(date);
+    };
+
+    // Преобразование всех дат в пользовательский часовой пояс
+    document.querySelectorAll('.utc-time').forEach(element => {
+        const utcTime = element.getAttribute('data-utc-time'); // Получаем время из атрибута
+        if (utcTime) {
+            element.textContent = convertToUserTimezone(utcTime); // Обновляем содержимое
+        }
+    });
+
     // Добавление строки
     document.getElementById('add-row').addEventListener('click', () => {
         const tableBody = document.querySelector('table tbody');
