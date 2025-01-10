@@ -27,7 +27,7 @@ def parse_table_to_json(table_str):
     """Конвертирует строковую таблицу в JSON."""
     data = [row.split('|')[1:-1] for row in table_str.splitlines() if '|' in row and '-' not in row]
     if not data:
-        raise None
+        raise ValueError
     headers = data.pop(0)
     return [dict(zip(headers, row)) for row in data]
 
@@ -72,12 +72,11 @@ def query_create(request):
                 response_data=response_text,
                 table_data=table_data
             )
-            messages.success(request, "Запрос успешно создан.")
             return redirect('query_result', pk=query.pk)
 
         except Exception as e:
             logger.exception("Ошибка при создании запроса.")
-            messages.error(request, "Произошла ошибка при обработке запроса. Попробуйте ещё раз.")
+            messages.error(request, "Произошла ошибка при обработке запроса. Попробуйте уточнить Ваш запрос и попробуйте ещё раз.")
             return redirect('query_create')
 
     return render(request, 'table/query_create.html')
@@ -120,12 +119,12 @@ def query_edit(request, pk):
             query.table_data = table_data
             query.save()
 
-            messages.success(request, "Запрос успешно обновлён.")
             return redirect('query_result', pk=query.pk)
 
         except Exception as e:
             logger.exception("Ошибка при редактировании запроса.")
-            messages.error(request, "Произошла ошибка при обновлении запроса. Попробуйте ещё раз.")
+            messages.error(request, "Произошла ошибка при обработке запроса. Попробуйте уточнить Ваш запрос и попробуйте ещё раз.")
+
             return redirect('query_edit', pk=query.pk)
 
     return render(request, 'table/query_edit.html', {'query': query})
