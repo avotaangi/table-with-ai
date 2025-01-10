@@ -8,6 +8,16 @@ from .models import QueryLog
 from gigachat.models import Chat, Messages, MessagesRole
 from gigachat import GigaChat
 import logging
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt
+def clear_messages(request):
+    if request.method == 'POST':
+        request.session.pop('_messages', None)
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'failed'}, status=405)
+
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)

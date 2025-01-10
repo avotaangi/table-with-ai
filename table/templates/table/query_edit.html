@@ -17,6 +17,10 @@
             </div>
         {% endfor %}
     </div>
+    <script>
+        // Удаляем сообщение после его отображения
+        fetch("{% url 'clear_messages' %}", { method: 'POST' });
+    </script>
 {% endif %}
 <div class="container mt-5">
     <h1>Редактировать запрос для создания таблицы</h1>
