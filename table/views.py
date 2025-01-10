@@ -1,5 +1,7 @@
 import json
 import os
+from datetime import datetime, timedelta
+
 import pandas as pd
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
@@ -35,7 +37,10 @@ def parse_table_to_json(table_str):
 def query_list(request):
     """Список всех запросов."""
     queries = QueryLog.objects.all()
+    for query in queries:
+        query.created_at = query.created_at + timedelta(hours=3)
     return render(request, 'table/query_list.html', {'queries': queries})
+
 
 
 from django.contrib import messages
