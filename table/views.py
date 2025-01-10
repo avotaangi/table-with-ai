@@ -47,6 +47,7 @@ def query_create(request):
             response = giga.chat(payload)
             payload.messages.append(response.choices[0].message)
             response_text = response.choices[0].message.content
+        logger.debug(f"GigaChat response: {response_text}")
         # Конвертируем данные таблицы в JSON
         table_data = parse_table_to_json(response_text)
         # Сохраняем в базе
