@@ -28,35 +28,48 @@ def query_list(request):
     return render(request, 'table/query_list.html', {'queries': queries})
 
 
+from django.contrib import messages
+
 def query_create(request):
     """Создание нового запроса."""
     if request.method == 'POST':
         query_text = request.POST.get('query_text')
-        payload = Chat(
-            messages=[
-                Messages(
-                    role=MessagesRole.SYSTEM,
-                    content="Ты бот, который составляет таблицы на основе текстовых запросов"
-                )
-            ],
-            temperature=0.7,
-        )
-        # Отправляем запрос в GigaChat
-        with GigaChat(credentials=os.getenv("ACCESS_TOKEN"), verify_ssl_certs=False) as giga:
-            payload.messages.append(Messages(role=MessagesRole.USER, content=query_text))
-            response = giga.chat(payload)
-            payload.messages.append(response.choices[0].message)
-            response_text = response.choices[0].message.content
-        logger.debug(f"GigaChat response: {response_text}")
-        # Конвертируем данные таблицы в JSON
-        table_data = parse_table_to_json(response_text)
-        # Сохраняем в базе
-        query = QueryLog.objects.create(
-            query_text=query_text,
-            response_data=response_text,
-            table_data=table_data
-        )
-        return redirect('query_result', pk=query.pk)
+        try:
+            payload = Chat(
+                messages=[
+                    Messages(
+                        role=MessagesRole.SYSTEM,
+                        content="Ты бот, который составляет таблицы на основе текстовых запросов"
+                    )
+                ],
+                temperature=0.7,
+            )
+            # Отправляем запрос в GigaChat
+            with GigaChat(credentials=os.getenv("ACCESS_TOKEN"), verify_ssl_certs=False) as giga:
+                payload.messages.append(Messages(role=MessagesRole.USER, content=query_text))
+                response = giga.chat(payload)
+                payload.messages.append(response.choices[0].message)
+                response_text = response.choices[0].message.content
+
+            logger.debug(f"GigaChat response: {response_text}")
+
+            # Конвертируем данные таблицы в JSON
+            table_data = parse_table_to_json(response_text)
+
+            # Сохраняем в базе
+            query = QueryLog.objects.create(
+                query_text=query_text,
+                response_data=response_text,
+                table_data=table_data
+            )
+            messages.success(request, "Запрос успешно создан.")
+            return redirect('query_result', pk=query.pk)
+
+        except Exception as e:
+            logger.exception("Ошибка при создании запроса.")
+            messages.error(request, "Произошла ошибка при обработке запроса. Попробуйте ещё раз.")
+            return redirect('query_create')
+
     return render(request, 'table/query_create.html')
 
 
@@ -71,29 +84,40 @@ def query_edit(request, pk):
     query = get_object_or_404(QueryLog, pk=pk)
     if request.method == 'POST':
         query_text = request.POST.get('query_text')
-        payload = Chat(
-            messages=[
-                Messages(
-                    role=MessagesRole.SYSTEM,
-                    content="Ты бот, который составляет таблицы на основе текстовых запросов"
-                )
-            ],
-            temperature=0.7,
-        )
-        # Отправляем запрос в GigaChat
-        with GigaChat(credentials=os.getenv("ACCESS_TOKEN"), verify_ssl_certs=False) as giga:
-            payload.messages.append(Messages(role=MessagesRole.USER, content=query_text))
-            response = giga.chat(payload)
-            payload.messages.append(response.choices[0].message)
-            response_text = response.choices[0].message.content
-        # Конвертируем данные таблицы в JSON
-        table_data = parse_table_to_json(response_text)
-        # Обновляем данные в QueryLog
-        query.query_text = query_text
-        query.response_data = response_text
-        query.table_data = table_data
-        query.save()
-        return redirect('query_result', pk=query.pk)
+        try:
+            payload = Chat(
+                messages=[
+                    Messages(
+                        role=MessagesRole.SYSTEM,
+                        content="Ты бот, который составляет таблицы на основе текстовых запросов"
+                    )
+                ],
+                temperature=0.7,
+            )
+            # Отправляем запрос в GigaChat
+            with GigaChat(credentials=os.getenv("ACCESS_TOKEN"), verify_ssl_certs=False) as giga:
+                payload.messages.append(Messages(role=MessagesRole.USER, content=query_text))
+                response = giga.chat(payload)
+                payload.messages.append(response.choices[0].message)
+                response_text = response.choices[0].message.content
+
+            # Конвертируем данные таблицы в JSON
+            table_data = parse_table_to_json(response_text)
+
+            # Обновляем данные в QueryLog
+            query.query_text = query_text
+            query.response_data = response_text
+            query.table_data = table_data
+            query.save()
+
+            messages.success(request, "Запрос успешно обновлён.")
+            return redirect('query_result', pk=query.pk)
+
+        except Exception as e:
+            logger.exception("Ошибка при редактировании запроса.")
+            messages.error(request, "Произошла ошибка при обновлении запроса. Попробуйте ещё раз.")
+            return redirect('query_edit', pk=query.pk)
+
     return render(request, 'table/query_edit.html', {'query': query})
 
 

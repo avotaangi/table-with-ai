@@ -9,6 +9,15 @@
     <title>Редактировать запрос</title>
 </head>
 <body>
+{% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 <div class="container mt-5">
     <h1>Редактировать запрос для создания таблицы</h1>
     <p>Напишите свой запрос для генерации таблицы. Советуем расписать как можно подробнее для получения наилучшего
