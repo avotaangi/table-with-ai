@@ -21,6 +21,7 @@
         }
         .list-group-item:hover {
             background-color: #f1f1f1;
+            cursor: pointer;
         }
         .btn-custom {
             background-color: #0056b3;
@@ -45,8 +46,8 @@
         {% if queries %}
             <ul class="list-group">
                 {% for query in queries %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div onclick="window.location.href='{% url 'query_result' query.pk %}';">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"  onclick="window.location.href='{% url 'query_result' query.pk %}';">
+                        <div>
                             <a href="{% url 'query_result' query.pk %}" class="text-decoration-none fw-bold text-primary">
                                 {{ query.query_text|truncatechars:100 }}
                             </a>
