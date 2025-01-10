@@ -87,4 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Произошла ошибка при сохранении.');
             });
     });
+    // Преобразование времени в локальное
+    document.querySelectorAll('.text-muted').forEach(element => {
+        const utcTime = element.textContent.match(/Дата создания: (.+)/);
+        if (utcTime && utcTime[1]) {
+            const localTime = new Date(utcTime[1]).toLocaleString();
+            element.textContent = `Дата создания: ${localTime}`;
+        }
+    });
 });
